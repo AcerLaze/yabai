@@ -601,7 +601,7 @@ static void do_window_transform(char *message)
       SLSTransactionSetWindowTransform(transaction, wid, 0, 0, CGAffineTransformConcat(transform, scale));
       SLSTransactionSetWindowSystemAlpha(transaction, wid, alpha);
     }
-    SLSTransactionCommit(transaction, 1);
+    SLSTransactionCommit(transaction, 0);
     CFRelease(transaction);
 }
 

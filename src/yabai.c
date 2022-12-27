@@ -175,7 +175,6 @@ static inline void init_misc_settings(void)
     snprintf(g_socket_file, sizeof(g_socket_file), SOCKET_PATH_FMT, user);
     snprintf(g_lock_file, sizeof(g_lock_file), LCFILE_PATH_FMT, user);
 
-    NSApplicationLoad();
     signal(SIGCHLD, SIG_IGN);
     signal(SIGPIPE, SIG_IGN);
     CGSetLocalEventsSuppressionInterval(0.0f);
@@ -268,6 +267,8 @@ static void parse_arguments(int argc, char **argv)
     }
 }
 
+extern int RunApplicationEventLoop(void);
+extern void _AXUIElementUseSecondaryAXThread(bool enabled);
 int main(int argc, char **argv)
 {
     if (argc > 1) {
@@ -332,13 +333,7 @@ int main(int argc, char **argv)
 
     exec_config_file();
 
-    for (;;) {
-        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        CFRunLoopRunResult result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 300, true);
-        [pool drain];
-
-        if (result == kCFRunLoopRunFinished || result == kCFRunLoopRunStopped) break;
-    }
-
+    _AXUIElementUseSecondaryAXThread(true);
+    RunApplicationEventLoop();
     return 0;
 }
